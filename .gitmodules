@@ -18,4 +18,4 @@
 	url = https://github.com/sindresorhus/pure.git
 [submodule "modules/opp/external"]
 	path = modules/opp/external
-	url = https://github.com/hchbaw/opp.zsh.git
+	url = https://github.com/dabido/opp.zsh.git
