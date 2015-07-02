@@ -14,8 +14,8 @@ fi
  
 bindkey -v
 bindkey -M viins ‘jj’ vi-cmd-mode
-#bindkey -M viins '\C-R' history-incremental-search-backward
-#bindkey -M vicmd '\C-R' history-incremental-search-backward
+#bindkey -M viins '\C-r' history-incremental-search-backward
+#bindkey -M vicmd '\C-r' history-incremental-search-backward
 export CLICOLOR=1
 # virtualenvwrapper
 source /usr/local/bin/virtualenvwrapper.sh
@@ -30,7 +30,7 @@ alias app01='ssh donovgr@nycpswliqapp01'
 alias wkgit='ssh donovgr@nycvswasliq05.misys.global.ad'
 alias linux='ssh donovgr@ny1180-vsrhlx01'
 alias ffind='find . -type f -name '
-alias wksh='ssh -l donovgr ny1180-lgdon.misys.global.ad'
+alias wksh='mosh donovgr@nycdnygdono.misys.global.ad -- tmux new-session -A -s work'
 alias wks='mosh --ssh="ssh -l donovgr" ny1180-lgdon.misys.global.ad' 
 alias lsd='ls -d *(/)'
 alias lld='ls -ld *(/)'
@@ -62,7 +62,7 @@ s() { echo "$*" | tr " " "+" | xargs -I %s open -a Safari "http://google.com/sea
 background() {
     "$@" &
   }
-  ## enable a ctlr-z toggle between vi(m) and sh
+## enable a ctlr-z toggle between vi(m) and sh
 foreground-vi() {
     fg %vi
   }
@@ -90,6 +90,7 @@ zstyle ':completion:*:(ssh|scp):*' tag-order users-hosts users hosts
 zstyle ':completion:*:(ssh|scp):*' group-order users-hosts users hosts 
 
 #======== powerline==================================== 
+powerline-daemon -q
 path+=( ~/Library/Python/2.7/bin )
 . /Library/python/2.7/site-packages/powerline/bindings/zsh/powerline.zsh
 
@@ -113,7 +114,13 @@ insert_sudo() { zle beginning-of-line; zle -U "sudo " }
 zle -N insert-sudo  insert_sudo
 bindkey "^s" insert-sudo
 export pager=vimpager
-calc() printf '%.6g\n' $((${*//(#bm)(([0-9.]##[ee][-+][0-9]##|[[:alnum:]_#]#[.#_[:alpha:]][[:alnum:]_#]#)|([0-9]##))/$match${match[3]:+.}}))
-alias 'calc=noglob calc'
+#calc() printf '%.6g\n' $((${*//(#bm)(([0-9.]##[ee][-+][0-9]##|[[:alnum:]_#]#[.#_[:alpha:]][[:alnum:]_#]#)|([0-9]##))/$match${match[3]:+.}}))
+alias calc=wcalc 
+alias cal='gcal .'
 fpath=(usr/local/share/zsh/site-functions $fpath) 
 export KEYTIMEOUT=1
+setopt interactivecomments
+alias ez='vim ~/.zshrc'
+alias sz='source ~/.zshenv' 
+alias ev='vim ~/.vimrc'
+alias em='vim ~/.muttrc'
