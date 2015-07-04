@@ -8,6 +8,7 @@
 #
 # General
 #
+=======
 
 # Set case-sensitivity for completion, history lookup, etc.
 # zstyle ':prezto:*:*' case-sensitive 'yes'
@@ -46,7 +47,7 @@ zstyle ':prezto:load' pmodule \
 #
 
 # Set the key mapping style to 'emacs' or 'vi'.
-zstyle ':prezto:module:editor' key-bindings 'emacs'
+zstyle ':prezto:module:editor' keymap 'vi'
 
 # Auto convert .... to ../..
 # zstyle ':prezto:module:editor' dot-expansion 'yes'
@@ -68,6 +69,8 @@ zstyle ':prezto:module:editor' key-bindings 'emacs'
 #
 # History Substring Search
 #
+zstyle ':prezto:module:history-substring-search' case-sensitive 'yes'
+zstyle ':prezto:module:history-substring-search' color 'yes' 
 
 # Set the query found color.
 # zstyle ':prezto:module:history-substring-search:color' found ''
@@ -124,19 +127,18 @@ zstyle ':prezto:module:prompt' theme 'sorin'
 
 # Set syntax highlighters.
 # By default, only the main highlighter is enabled.
-# zstyle ':prezto:module:syntax-highlighting' highlighters \
-#   'main' \
-#   'brackets' \
-#   'pattern' \
-#   'line' \
-#   'cursor' \
-#   'root'
+ zstyle ':prezto:module:syntax-highlighting' highlighters \
+   'main' \
+   'brackets' \
+   'pattern' \
+   'cursor' \
+   'root'
 #
 # Set syntax highlighting styles.
-# zstyle ':prezto:module:syntax-highlighting' styles \
-#   'builtin' 'bg=blue' \
-#   'command' 'bg=blue' \
-#   'function' 'bg=blue'
+ zstyle ':prezto:module:syntax-highlighting' styles \
+   'builtin' 'bg=blue' \
+   'command' 'bg=blue' \
+   'function' 'bg=blue'
 
 #
 # Terminal
