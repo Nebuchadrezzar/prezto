@@ -16,10 +16,15 @@ bindkey -v
 bindkey -M viins ‘jj’ vi-cmd-mode
 #bindkey -M viins '\C-r' history-incremental-search-backward
 #bindkey -M vicmd '\C-r' history-incremental-search-backward
+fpath=(usr/local/share/zsh/site-functions $fpath) 
 export CLICOLOR=1
+export KEYTIMEOUT=1
 # virtualenvwrapper
 source /usr/local/bin/virtualenvwrapper.sh
+# setopt
 setopt completealiases
+setopt interactivecomments
+setopt extended_glob
 
 # shortcuts
 alias ora72='rlwrap -D 2 -i -c sqlplus LS2USER/LS2USER@nycpswliqapp02.misys.global.ad/LOANIQ72'
@@ -36,7 +41,6 @@ alias lsd='ls -d *(/)'
 alias lld='ls -ld *(/)'
 hidden() { ls -a "$@" | grep '^\.'; }
 alias ttmux='if tmux has; then tmux attach; else ~/tmux_development ; fi'
-h() { if [ -z "$*" ]; then history 1; else history 1 | egrep "$@"; fi; }
 alias hosh='ssh admin@ovid.dyndns-remote.com -p 10443'
 alias c='clear'
 alias safari="open -a /Applications/Safari.app/Contents/MacOS/Safari"
@@ -44,7 +48,17 @@ alias hn=hostname
 alias f='vifm'
 # ls to pager
 lsp() { ls --color=always -l "$@" | less -r }
-
+alias sqlite='rlwrap -a dummy: -i -r /usr/local/cellar/sqlite/3.8.5/bin/sqlite3'
+alias updatedb='/usr/libexec/locate.updatedb'
+alias desk='mosh donovgr@nycdnygdono.misys.global.ad'
+export pager=vimpager
+alias calc=wcalc 
+alias cal='gcal .'
+alias ez='vim ~/.zshrc'
+alias sz='source ~/.zshenv' 
+alias ev='vim ~/.vimrc'
+alias em='vim ~/.muttrc'
+alias diff='diff -Bb'
 # global aliases 
 alias -s txt=vim
 alias -s cpp=vim
@@ -54,24 +68,23 @@ alias -s java=vim
 alias -s ddl=vim
 alias -s sql=vim
 
-alias diff='diff -Bb'
-
 #functions
-## so a search with safari from sh
+h() { if [ -z "$*" ]; then history 1; else history 1 | egrep "$@"; fi; }
+# so a search with safari from sh
 s() { echo "$*" | tr " " "+" | xargs -I %s open -a Safari "http://google.com/search?q=%s" }
 background() {
     "$@" &
   }
-## enable a ctlr-z toggle between vi(m) and sh
+# enable a ctlr-z toggle between vi(m) and sh
 foreground-vi() {
     fg %vi
   }
 zle -N foreground-vi
 bindkey '^Z' foreground-vi
 
-## check files changed today
+# check files changed today
 m1() { ls -tld **/*(m-1) }
-## remove spaces from filenames
+# remove spaces from filenames
 rmSpace() { for a in ./**/*\ *(Dod); do mv $a ${a:h}/${a:t:gs/ /_}; done } 
 
 # help files for builtins
@@ -80,8 +93,20 @@ autoload -U run-help zcalc
 HELPDIR=~/zsh_help
 alias zman='run-help'
 
-# extended globbing 
-setopt extended_glob
+# create a register for yanking and pasting from shell to clipboard 
+# tricky to use: first populate vi's register, then use these commands to copy/paste to system clipboard 
+vi-append-x-selection () { rbuffer=$(xclip -o </dev/null)$rbuffer; }
+zle -N vi-append-x-selection
+bindkey -a '^p' vi-append-x-selection
+
+vi-yank-x-selection () { print -rn -- $cutbuffer | xclip -i; }
+zle -N vi-yank-x-selection
+bindkey -a '^y' vi-yank-x-selection
+
+# function to adding sudo to a line
+insert_sudo() { zle beginning-of-line; zle -U "sudo " }
+zle -N insert-sudo  insert_sudo
+bindkey "^s" insert-sudo
 
 # ssh completion 
 _accounts=({donovgr,Thupload}@ny1180-lgdon.misys.global.ad {gregory,admin}@mnemosyne.local gregory@Durendal.local )
@@ -89,38 +114,10 @@ zstyle ':completion:*:my-accounts' users-hosts $_accounts
 zstyle ':completion:*:(ssh|scp):*' tag-order users-hosts users hosts
 zstyle ':completion:*:(ssh|scp):*' group-order users-hosts users hosts 
 
-#======== powerline==================================== 
+# powerline
 powerline-daemon -q
 path+=( ~/Library/Python/2.7/bin )
 . /Library/python/2.7/site-packages/powerline/bindings/zsh/powerline.zsh
 
-# ========= rvm ========================================
+# rvm 
 #path=$path:$home/.rvm/bin # add rvm to path for scripting
-
-# ===== create a register for yanking and pasting from shell to clipboard 
-# tricky to use: first populate vi's register, then use these commands to copy/paste to system clipboard 
-vi-append-x-selection () { rbuffer=$(xclip -o </dev/null)$rbuffer; }
-zle -N vi-append-x-selection
-bindkey -a '^p' vi-append-x-selection
-vi-yank-x-selection () { print -rn -- $cutbuffer | xclip -i; }
-zle -N vi-yank-x-selection
-bindkey -a '^y' vi-yank-x-selection
-
-alias sqlite='rlwrap -a dummy: -i -r /usr/local/cellar/sqlite/3.8.5/bin/sqlite3'
-alias updatedb='/usr/libexec/locate.updatedb'
-alias desk='mosh donovgr@nycdnygdono.misys.global.ad'
-
-insert_sudo() { zle beginning-of-line; zle -U "sudo " }
-zle -N insert-sudo  insert_sudo
-bindkey "^s" insert-sudo
-export pager=vimpager
-#calc() printf '%.6g\n' $((${*//(#bm)(([0-9.]##[ee][-+][0-9]##|[[:alnum:]_#]#[.#_[:alpha:]][[:alnum:]_#]#)|([0-9]##))/$match${match[3]:+.}}))
-alias calc=wcalc 
-alias cal='gcal .'
-fpath=(usr/local/share/zsh/site-functions $fpath) 
-export KEYTIMEOUT=1
-setopt interactivecomments
-alias ez='vim ~/.zshrc'
-alias sz='source ~/.zshenv' 
-alias ev='vim ~/.vimrc'
-alias em='vim ~/.muttrc'
