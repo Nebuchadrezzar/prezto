@@ -11,3 +11,110 @@ if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
 fi
 
 # Customize to your needs...
+ 
+bindkey -v
+bindkey -M viins ‘jj’ vi-cmd-mode
+#bindkey -M viins '\C-R' history-incremental-search-backward
+#bindkey -M vicmd '\C-R' history-incremental-search-backward
+
+# virtualenvwrapper
+source /usr/local/bin/virtualenvwrapper.sh
+setopt completealiases
+
+# shortcuts
+alias ora72='rlwrap -D 2 -i -c sqlplus LS2USER/LS2USER@nycpswliqapp02.misys.global.ad/LOANIQ72'
+alias ora60='rlwrap -D 2 -i -c sqlplus ls2user/LS2USER@ny1180-hclw01/LOANIQ60'
+alias app02='ssh donovgr@nycpswliqapp02'
+alias app03='ssh donovgr@nycpswliqapp03'
+alias app01='ssh donovgr@nycpswliqapp01'
+alias wkgit='ssh donovgr@nycvswasliq05.misys.global.ad'
+alias linux='ssh donovgr@ny1180-vsrhlx01'
+alias ffind='find . -type f -name '
+alias wksh='ssh -l donovgr ny1180-lgdon.misys.global.ad'
+alias wks='mosh --ssh="ssh -l donovgr" ny1180-lgdon.misys.global.ad' 
+alias lsd='ls -d *(/)'
+alias lld='ls -ld *(/)'
+hidden() { ls -a "$@" | grep '^\.'; }
+alias ttmux='if tmux has; then tmux attach; else ~/tmux_development ; fi'
+h() { if [ -z "$*" ]; then history 1; else history 1 | egrep "$@"; fi; }
+alias hosh='ssh admin@ovid.dyndns-remote.com -p 10443'
+alias c='clear'
+alias safari="open -a /Applications/Safari.app/Contents/MacOS/Safari"
+alias hn=hostname
+# ls to pager
+lsp() { ls --color=always -l "$@" | less -r }
+
+# global aliases 
+alias -s txt=vim
+alias -s cpp=vim
+alias -s sqc=vim
+alias -s py=vim
+alias -s java=vim
+alias -s ddl=vim
+alias -s sql=vim
+
+alias diff='diff -Bb'
+
+#functions
+## so a search with safari from sh
+s() { echo "$*" | tr " " "+" | xargs -I %s open -a Safari "http://google.com/search?q=%s" }
+background() {
+    "$@" &
+  }
+  ## enable a ctlr-z toggle between vi(m) and sh
+foreground-vi() {
+    fg %vi
+  }
+zle -N foreground-vi
+bindkey '^Z' foreground-vi
+
+## check files changed today
+m1() { ls -tld **/*(m-1) }
+## remove spaces from filenames
+rmSpace() { for a in ./**/*\ *(Dod); do mv $a ${a:h}/${a:t:gs/ /_}; done } 
+
+# help files for builtins
+# unalias run-help
+autoload -U run-help zcalc
+HELPDIR=~/zsh_help
+alias zman='run-help'
+
+# extended globbing 
+setopt extended_glob
+
+# ssh completion 
+_accounts=({donovgr,Thupload}@ny1180-lgdon.misys.global.ad {gregory,admin}@mnemosyne.local gregory@Durendal.local )
+zstyle ':completion:*:my-accounts' users-hosts $_accounts
+zstyle ':completion:*:(ssh|scp):*' tag-order users-hosts users hosts
+zstyle ':completion:*:(ssh|scp):*' group-order users-hosts users hosts 
+
+#======== powerline==================================== 
+path+=( ~/Library/Python/2.7/bin )
+. /users/gregory/library/python/2.7/lib/python/site-packages/powerline/bindings/zsh/powerline.zsh
+#. /users/gregory/get-short-path.zsh
+#. /users/gregory/git-omz.zsh
+
+# ========= rvm ========================================
+#path=$path:$home/.rvm/bin # add rvm to path for scripting
+
+# ===== create a register for yanking and pasting from shell to clipboard 
+# tricky to use: first populate vi's register, then use these commands to copy/paste to system clipboard 
+vi-append-x-selection () { rbuffer=$(xclip -o </dev/null)$rbuffer; }
+zle -N vi-append-x-selection
+bindkey -a '^p' vi-append-x-selection
+vi-yank-x-selection () { print -rn -- $cutbuffer | xclip -i; }
+zle -N vi-yank-x-selection
+bindkey -a '^y' vi-yank-x-selection
+
+alias sqlite='rlwrap -a dummy: -i -r /usr/local/cellar/sqlite/3.8.5/bin/sqlite3'
+alias updatedb='/usr/libexec/locate.updatedb'
+alias desk='ssh donovgr@nycdnygdono.misys.global.ad'
+
+insert_sudo() { zle beginning-of-line; zle -U "sudo " }
+zle -N insert-sudo  insert_sudo
+bindkey "^s" insert-sudo
+export pager=vimpager
+calc() printf '%.6g\n' $((${*//(#bm)(([0-9.]##[ee][-+][0-9]##|[[:alnum:]_#]#[.#_[:alpha:]][[:alnum:]_#]#)|([0-9]##))/$match${match[3]:+.}}))
+alias 'calc=noglob calc'
+fpath=(usr/local/share/zsh/site-functions $fpath) 
+export KEYTIMEOUT=1
