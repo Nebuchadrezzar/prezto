@@ -17,7 +17,6 @@ bindkey -M viins ‘jj’ vi-cmd-mode
 #bindkey -M viins '\C-r' history-incremental-search-backward
 #bindkey -M vicmd '\C-r' history-incremental-search-backward
 fpath=(usr/local/share/zsh/site-functions $fpath) 
->>>>>>> cleaned up zshrc
 export CLICOLOR=1
 export KEYTIMEOUT=1
 # virtualenvwrapper
@@ -77,7 +76,6 @@ background() {
     "$@" &
   }
 # enable a ctlr-z toggle between vi(m) and sh
->>>>>>> cleaned up zshrc
 foreground-vi() {
     fg %vi
   }
@@ -117,8 +115,6 @@ zstyle ':completion:*:(ssh|scp):*' tag-order users-hosts users hosts
 zstyle ':completion:*:(ssh|scp):*' group-order users-hosts users hosts 
 
 # powerline
-powerline-daemon -q
->>>>>>> cleaned up zshrc
 path+=( ~/Library/Python/2.7/bin )
 . /Library/python/2.7/site-packages/powerline/bindings/zsh/powerline.zsh
 
@@ -146,3 +142,9 @@ calc() printf '%.6g\n' $((${*//(#bm)(([0-9.]##[ee][-+][0-9]##|[[:alnum:]_#]#[.#_
 alias 'calc=noglob calc'
 fpath=(usr/local/share/zsh/site-functions $fpath) 
 export KEYTIMEOUT=1
+#powerline-daemon -q
+#path+=( ~/Library/Python/2.7/bin )
+#. /Library/python/2.7/site-packages/powerline/bindings/zsh/powerline.zsh
+
+# add rvm to path for scripting 
+# export PATH=$PATH:$home/.rvm/bin 
