@@ -89,9 +89,11 @@ rmSpace() { for a in ./**/*\ *(Dod); do mv $a ${a:h}/${a:t:gs/ /_}; done }
 
 # help files for builtins
 # unalias run-help
-autoload -U run-help zcalc
+autoload -Uz run-help zcalc promptinit
 HELPDIR=~/zsh_help
 alias zman='run-help'
+promptinit
+prompt sorin
 
 # create a register for yanking and pasting from shell to clipboard 
 # tricky to use: first populate vi's register, then use these commands to copy/paste to system clipboard 
