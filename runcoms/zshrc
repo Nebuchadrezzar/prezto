@@ -115,9 +115,9 @@ zstyle ':completion:*:(ssh|scp):*' tag-order users-hosts users hosts
 zstyle ':completion:*:(ssh|scp):*' group-order users-hosts users hosts 
 
 # powerline
-powerline-daemon -q
-path+=( ~/Library/Python/2.7/bin )
-. /Library/python/2.7/site-packages/powerline/bindings/zsh/powerline.zsh
+#powerline-daemon -q
+#path+=( ~/Library/Python/2.7/bin )
+#. /Library/python/2.7/site-packages/powerline/bindings/zsh/powerline.zsh
 
-# rvm 
-#path=$path:$home/.rvm/bin # add rvm to path for scripting
+# add rvm to path for scripting 
+# export PATH=$PATH:$home/.rvm/bin 
