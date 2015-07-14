@@ -123,3 +123,5 @@ zstyle ':completion:*:(ssh|scp):*' group-order users-hosts users hosts
 
 # add rvm to path for scripting 
 # export PATH=$PATH:$home/.rvm/bin 
+
+export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
