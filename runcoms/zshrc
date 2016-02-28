@@ -27,21 +27,11 @@ setopt interactivecomments
 setopt extended_glob
 
 # shortcuts
-alias ora72='rlwrap -D 2 -i -c sqlplus LS2USER/LS2USER@nycpswliqapp02.misys.global.ad/LOANIQ72'
-alias ora60='rlwrap -D 2 -i -c sqlplus ls2user/LS2USER@ny1180-hclw01/LOANIQ60'
-alias app02='ssh donovgr@nycpswliqapp02'
-alias app03='ssh donovgr@nycpswliqapp03'
-alias app01='ssh donovgr@nycpswliqapp01'
-alias wkgit='ssh donovgr@nycvswasliq05.misys.global.ad'
-alias linux='ssh donovgr@ny1180-vsrhlx01'
 alias ffind='find . -type f -name '
-alias wksh='ssh -l donovgr ny1180-lgdon.misys.global.ad'
-alias wks='mosh --ssh="ssh -l donovgr" ny1180-lgdon.misys.global.ad' 
 alias lsd='ls -d *(/)'
 alias lld='ls -ld *(/)'
 hidden() { ls -a "$@" | grep '^\.'; }
 alias ttmux='if tmux has; then tmux attach; else ~/tmux_development ; fi'
-alias hosh='ssh admin@ovid.dyndns-remote.com -p 10443'
 alias c='clear'
 alias safari="open -a /Applications/Safari.app/Contents/MacOS/Safari"
 alias hn=hostname
@@ -50,7 +40,6 @@ alias f='vifm'
 lsp() { ls --color=always -l "$@" | less -r }
 alias sqlite='rlwrap -a dummy: -i -r /usr/local/cellar/sqlite/3.8.5/bin/sqlite3'
 alias updatedb='/usr/libexec/locate.updatedb'
-alias desk='mosh donovgr@nycdnygdono.misys.global.ad'
 export pager=vimpager
 alias calc=wcalc 
 alias cal='gcal .'
@@ -111,44 +100,8 @@ zle -N insert-sudo  insert_sudo
 bindkey "^s" insert-sudo
 
 # ssh completion 
-_accounts=({donovgr,Thupload}@ny1180-lgdon.misys.global.ad {gregory,admin}@mnemosyne.local gregory@Durendal.local )
 zstyle ':completion:*:my-accounts' users-hosts $_accounts
 zstyle ':completion:*:(ssh|scp):*' tag-order users-hosts users hosts
 zstyle ':completion:*:(ssh|scp):*' group-order users-hosts users hosts 
-
-# powerline
-path+=( ~/Library/Python/2.7/bin )
-. /Library/python/2.7/site-packages/powerline/bindings/zsh/powerline.zsh
-
-# rvm 
-#path=$path:$home/.rvm/bin # add rvm to path for scripting
-
-# ===== create a register for yanking and pasting from shell to clipboard 
-# tricky to use: first populate vi's register, then use these commands to copy/paste to system clipboard 
-vi-append-x-selection () { rbuffer=$(xclip -o </dev/null)$rbuffer; }
-zle -N vi-append-x-selection
-bindkey -a '^p' vi-append-x-selection
-vi-yank-x-selection () { print -rn -- $cutbuffer | xclip -i; }
-zle -N vi-yank-x-selection
-bindkey -a '^y' vi-yank-x-selection
-
-alias sqlite='rlwrap -a dummy: -i -r /usr/local/cellar/sqlite/3.8.5/bin/sqlite3'
-alias updatedb='/usr/libexec/locate.updatedb'
-alias desk='mosh donovgr@nycdnygdono.misys.global.ad'
-
-insert_sudo() { zle beginning-of-line; zle -U "sudo " }
-zle -N insert-sudo  insert_sudo
-bindkey "^s" insert-sudo
-export pager=vimpager
-calc() printf '%.6g\n' $((${*//(#bm)(([0-9.]##[ee][-+][0-9]##|[[:alnum:]_#]#[.#_[:alpha:]][[:alnum:]_#]#)|([0-9]##))/$match${match[3]:+.}}))
-alias 'calc=noglob calc'
-fpath=(usr/local/share/zsh/site-functions $fpath) 
-export KEYTIMEOUT=1
-#powerline-daemon -q
-#path+=( ~/Library/Python/2.7/bin )
-#. /Library/python/2.7/site-packages/powerline/bindings/zsh/powerline.zsh
-
-# add rvm to path for scripting 
-# export PATH=$PATH:$home/.rvm/bin 
 
 export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
