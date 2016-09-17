@@ -28,6 +28,7 @@ setopt extended_glob
 
 # shortcuts
 alias ffind='find . -type f -name '
+#alias wksh='mosh donovgr@nycdnygdono.misys.global.ad -- tmux new-session -A -s work'
 alias lsd='ls -d *(/)'
 alias lld='ls -ld *(/)'
 hidden() { ls -a "$@" | grep '^\.'; }
