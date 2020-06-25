@@ -1,3 +1,10 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 #
 # Executes commands at the start of an interactive session.
 #
@@ -11,3 +18,75 @@ if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
 fi
 
 # Customize to your needs...
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# setopt
+setopt completealiases
+setopt interactivecomments
+setopt extended_glob
+unsetopt nomatch
+
+
+# Pyenv configs 
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+if command -v pyenv 1>/dev/null 2>&1; then
+  eval "$(pyenv init -)"
+fi
+
+# Bat config 
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+
+# vim key bindings 
+bindkey -v
+
+alias ez='vim ~/.zshrc'
+alias sz='source ~/.zshrc' 
+alias ev='vim ~/.vimrc'
+alias em='vim ~/.muttrc'
+alias et='vim ~/.tmux.conf'
+alias hn=hostname
+alias c='clear'
+alias safari="open -a /Applications/Safari.app/Contents/MacOS/Safari"
+
+# youtube-dl
+alias 2mp4='youtube-dl -o "%(title)s-%(id)s.%(ext)s" --extract-audio --audio-format=m4a'
+
+# Global aliases
+alias -s txt=vim
+alias -s cpp=vim
+alias -s sqc=vim
+alias -s java=vim
+alias -s ddl=vim
+alias -s sql=vim
+
+# function to adding sudo to a line
+insert_sudo() { zle beginning-of-line; zle -U "sudo " }
+zle -N insert-sudo  insert_sudo
+bindkey "^s" insert-sudo
+
+function :q {
+if [ ${TMUX} ]; then
+      	tmux detach
+      else builtin exit
+      fi
+}
+
+
+# Automatically quote URLs when pasted
+autoload -U url-quote-magic
+zle -N self-insert url-quote-magic
+
+# Fasd configurations  
+alias awk=gawk
+alias sed=gsed
+alias v='f -e vim'
+alias m='f -e mpv'
+eval "$(fasd --init posix-alias zsh-hook)"
+j() {
+  fasdlist=$( fasd -d -l -r $1 | \
+    fzf --query="$1 " --select-1 --exit-0 --height=25% --reverse --tac --no-sort --cycle) &&
+    cd "$fasdlist"
+}
