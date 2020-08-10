@@ -74,6 +74,10 @@ if [ ${TMUX} ]; then
       fi
 }
 
+function h { 
+	cmd=$(history 1 | fzf +s --tac | sed -re 's/^\s*[0-9]*\s*//')
+	eval $cmd 
+}
 
 # Automatically quote URLs when pasted
 autoload -U url-quote-magic
@@ -90,3 +94,6 @@ j() {
     fzf --query="$1 " --select-1 --exit-0 --height=25% --reverse --tac --no-sort --cycle) &&
     cd "$fasdlist"
 }
+
+export DATABASE_URL=sqlite:////Users/gregorydonovan/PycharmProjects/Django_project/db.sqlite3
+export PATH="/usr/local/opt/sqlite/bin:$PATH"
