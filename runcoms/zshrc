@@ -23,23 +23,30 @@ fi
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 # setopt
+fpath+=~/.zfunc
+setopt histreduceblanks
+setopt histignorespace
+setopt histignorealldups
+setopt listpacked
+setopt alwaystoend
+
 setopt completealiases
 setopt interactivecomments
 setopt extended_glob
 unsetopt nomatch
 
 
-# Pyenv configs 
+# Pyenv configs
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 if command -v pyenv 1>/dev/null 2>&1; then
   eval "$(pyenv init -)"
 fi
 
-# Bat config 
+# Bat config
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 
-# vim key bindings 
+# vim key bindings
 bindkey -v
 
 alias ez='vim ~/.zshrc'
@@ -48,13 +55,19 @@ alias ev='vim ~/.vimrc'
 alias em='vim ~/.muttrc'
 alias et='vim ~/.tmux.conf'
 alias hn=hostname
-alias c='clear'
+# for the host machine
+alias doc=docker
+function c {
+  docker exec -ti "$1" zsh
+}
+
+# bespoke to mac
 alias safari="open -a /Applications/Safari.app/Contents/MacOS/Safari"
 
 # youtube-dl
 alias 2mp4='youtube-dl -o "%(title)s-%(id)s.%(ext)s" --extract-audio --audio-format=m4a'
 
-# Global aliases
+# Suffix aliases
 alias -s txt=vim
 alias -s cpp=vim
 alias -s sqc=vim
@@ -67,6 +80,7 @@ insert_sudo() { zle beginning-of-line; zle -U "sudo " }
 zle -N insert-sudo  insert_sudo
 bindkey "^s" insert-sudo
 
+alias tt='~/.dev_tmux'
 function :q {
 if [ ${TMUX} ]; then
       	tmux detach
@@ -74,26 +88,36 @@ if [ ${TMUX} ]; then
       fi
 }
 
-function h { 
+function h {
 	cmd=$(history 1 | fzf +s --tac | sed -re 's/^\s*[0-9]*\s*//')
-	eval $cmd 
+	eval $cmd
 }
 
 # Automatically quote URLs when pasted
-autoload -U url-quote-magic
+autoload -Uz url-quote-magic, compinit
 zle -N self-insert url-quote-magic
-
-# Fasd configurations  
+compinit
+# Fasd configurations
 alias awk=gawk
 alias sed=gsed
 alias v='f -e vim'
 alias m='f -e mpv'
+alias myip='dig myip.opendns.com @resolver1.opendns.com -4 +short'
+alias l='colorls'
+
+# list project files changed in the last n days
+changes() {
+  ls -l **/*(py|xml|html|xq)(.md-$1)
+}
+
 eval "$(fasd --init posix-alias zsh-hook)"
 j() {
   fasdlist=$( fasd -d -l -r $1 | \
     fzf --query="$1 " --select-1 --exit-0 --height=25% --reverse --tac --no-sort --cycle) &&
     cd "$fasdlist"
 }
-
+source $(dirname $(gem which colorls))/tab_complete.sh
 export DATABASE_URL=sqlite:////Users/gregorydonovan/PycharmProjects/Django_project/db.sqlite3
 export PATH="/usr/local/opt/sqlite/bin:$PATH"
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
