@@ -54,7 +54,12 @@ alias sz='source ~/.zshrc'
 alias ev='vim ~/.vimrc'
 alias em='vim ~/.muttrc'
 alias et='vim ~/.tmux.conf'
+alias es='vim ~/.ssh/config'
 alias hn=hostname
+alias awk=gawk
+alias sed=gsed
+alias gs='git status'
+alias gl="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 # for the host machine
 alias doc=docker
 function c {
@@ -98,12 +103,12 @@ autoload -Uz url-quote-magic, compinit
 zle -N self-insert url-quote-magic
 compinit
 # Fasd configurations
-alias awk=gawk
-alias sed=gsed
 alias v='f -e vim'
 alias m='f -e mpv'
+
 alias myip='dig myip.opendns.com @resolver1.opendns.com -4 +short'
-alias l='colorls'
+
+alias l='colorls --sd -l --gs --dark -h'
 
 # list project files changed in the last n days
 changes() {
@@ -116,8 +121,24 @@ j() {
     fzf --query="$1 " --select-1 --exit-0 --height=25% --reverse --tac --no-sort --cycle) &&
     cd "$fasdlist"
 }
+vv() {
+    local file
+    # if arg1 is a path to existing file then simply open it in the editor
+    test -e "$1" && $EDITOR "$@" && return
+    # else use fasd and fzf to search for recent files
+    file="$(fasd -Rfl "$*" | fzf -1 -0 --no-sort +m)" && $EDITOR "${file}" || $EDITOR "$@"
+}
+
+
+
 source $(dirname $(gem which colorls))/tab_complete.sh
 export DATABASE_URL=sqlite:////Users/gregorydonovan/PycharmProjects/Django_project/db.sqlite3
-export PATH="/usr/local/opt/sqlite/bin:$PATH"
+# adding rush
+export PATH="/usr/local/opt/sqlite/bin:$PATH:/usr/local/Cellar/r/4.1.2/lib/R/library/rush/exec/"
+# adding gnu make
+PATH="/usr/local/opt/make/libexec/gnubin:$PATH"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
