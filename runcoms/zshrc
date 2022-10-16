@@ -22,23 +22,53 @@ fi
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
+# help
+autoload run-help
+HELPDIR=$(command brew --prefix)/share/zsh/help  # used when zsh is installed with brew
+# HELPDIR=/usr/share/zsh/"${ZSH_VERSION}"/help
+alias help=run-help
+
 # setopt
 fpath+=~/.zfunc
+unsetopt nomatch
+setopt alwaystoend
 setopt histreduceblanks
 setopt histignorespace
+# Before storing an item to the history, delete any dups
 setopt histignorealldups
+# Append each line to the history immediately after it is entered
+setopt ShareHistory        2>/dev/null
+# Allow completion list columns to be different sizes
 setopt listpacked
-setopt alwaystoend
-
-setopt completealiases
+# Allow comments in an interactive shell.
 setopt interactivecomments
+# Allow extended globbing syntax
 setopt extended_glob
-unsetopt nomatch
+# Turn off terminal beeping
+setopt NoBeep              2>/dev/null
+# Automatically list ambiguous completions
+setopt AutoList            2>/dev/null
+# Don't require an extra tab before listing ambiguous completions
+setopt NoBashAutoList      2>/dev/null
+# Don't require an extra tab when there is an unambiguous pre- or suffix
+setopt NoListAmbiguous     2>/dev/null
+# Tab on ambiguous completions cycles through possibilities
+setopt AutoMenu            2>/dev/null
+# cd adds directories to the stack like pushd
+setopt AutoPushd           2>/dev/null
+ # the same folder will never get pushed twice
+setopt PushdIgnoreDups     2>/dev/null
+# if alias foo=bar, complete as if foo were entered, rather than bar
+setopt CompleteAliases     2>/dev/null
+# Attempt to spell-check command names
+setopt Correct             2>/dev/null
 
 
 # Pyenv configs
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
+export TERMINFO_DIRS=$TERMINFO_DIRS:$HOME/.local/share/terminfo
+
 if command -v pyenv 1>/dev/null 2>&1; then
   eval "$(pyenv init -)"
 fi
@@ -49,12 +79,15 @@ export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 # vim key bindings
 bindkey -v
 
+# Aliases 
 alias ez='vim ~/.zshrc'
 alias sz='source ~/.zshrc' 
 alias ev='vim ~/.vimrc'
 alias em='vim ~/.muttrc'
 alias et='vim ~/.tmux.conf'
 alias es='vim ~/.ssh/config'
+alias ey='vim ~/.yabairc'
+alias ek='vim ~/.skhdrc'
 alias hn=hostname
 alias awk=gawk
 alias sed=gsed
@@ -62,12 +95,32 @@ alias gs='git status'
 alias gl="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 # for the host machine
 alias doc=docker
+alias gls="gls --hyperlink --color=auto -A --group-directories-first -h"
+alias ck="python manage.py check"
+alias hid="ls -d .*"
+alias ll="l -la"
+alias lsd='ls -d *(/)'
+alias lg=lazygit
+alias reftags='ctags --fields=+i -n -R -L' # refresh tags
+alias ff='find . -type f -iname '
+alias fd='find . -type d -iname '
+
 function c {
   docker exec -ti "$1" zsh
 }
 
+# image view shortcut
+alias icat="kitty +kitten icat --align=left"
+
+# kitty emulator reload
+alias theme-reset="kitty @ --to unix:/tmp/kitty set-colors --reset"
+
 # bespoke to mac
 alias safari="open -a /Applications/Safari.app/Contents/MacOS/Safari"
+
+# Nord dir_colors
+# depends on gnu coreutils and https://github.com/arcticicestudio/nord-dircolors
+test -r ~/.dir_colors && eval $(gdircolors ~/.dir_colors)
 
 # youtube-dl
 alias 2mp4='youtube-dl -o "%(title)s-%(id)s.%(ext)s" --extract-audio --audio-format=m4a'
@@ -79,6 +132,16 @@ alias -s sqc=vim
 alias -s java=vim
 alias -s ddl=vim
 alias -s sql=vim
+alias -s py=vim
+
+# Global aliases
+alias -g L='|less'
+alias -g B='|bat'
+alias -g T='|tail'
+alias -g H='|head'
+alias -g V='|vim -'
+alias -g NF='*(.om[1])'  # glob for just the latest file
+alias config='/usr/bin/git --git-dir=/Users/gregorydonovan/projects/dotfiles/ --work-tree=/Users/gregorydonovan'
 
 # function to adding sudo to a line
 insert_sudo() { zle beginning-of-line; zle -U "sudo " }
@@ -108,7 +171,10 @@ alias m='f -e mpv'
 
 alias myip='dig myip.opendns.com @resolver1.opendns.com -4 +short'
 
-alias l='colorls --sd -l --gs --dark -h'
+alias l='colorls --hyperlink --sd -l --gs --dark -h -Gg'
+
+# delegate completion to rg from kg wrapper for kitty hyperlinked_grep
+compdef _rg kg
 
 # list project files changed in the last n days
 changes() {
@@ -132,13 +198,25 @@ vv() {
 
 
 source $(dirname $(gem which colorls))/tab_complete.sh
-export DATABASE_URL=sqlite:////Users/gregorydonovan/PycharmProjects/Django_project/db.sqlite3
-# adding rush
+
+# export DATABASE_URL=sqlite:////Users/gregorydonovan/PycharmProjects/Django_project/db.sqlite3
+export DATABASE_URL=postgresql://core_service:test123!@localhost/lendingplatform
+# adding rush, an shell interface to R
 export PATH="/usr/local/opt/sqlite/bin:$PATH:/usr/local/Cellar/r/4.1.2/lib/R/library/rush/exec/"
 # adding gnu make
-PATH="/usr/local/opt/make/libexec/gnubin:$PATH"
+# export PATH="/usr/local/opt/make/libexec/gnubin:$PATH"
+# adding gnu coreutils
+# PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
+#eval $(dircolors)
 
+# Adding the django project to the path
+export PATH=$PATH:/Users/gregorydonovan/PycharmProjects/Django_project/django_project
+
+
+export FZF_DEFAULT_OPTS='--no-height'
+export FZF_CTRL_T_OPTS="--preview '(bat --color=always --style numbers,changes {} || cat {} || tree -C {}) 2> /dev/null | head -500'"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
