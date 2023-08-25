@@ -43,13 +43,13 @@ zstyle ':prezto:load' pmodule \
   'syntax-highlighting' \
   'prompt' \
   'history-substring-search' \
-  'autosuggestions' 
+  'autosuggestions'
 #
 # Autosuggestions
 #
 
 # Set the query found color.
-# zstyle ':prezto:module:autosuggestions:color' found ''
+zstyle ':prezto:module:autosuggestions:color' found 'fg=240'
 
 #
 # Completions
@@ -106,10 +106,10 @@ zstyle ':prezto:module:gnu-utility' prefix 'g'
 #zstyle ':prezto:module:history-substring-search' color 'yes' 
 
 # Set the query found color.
- zstyle ':prezto:module:history-substring-search:color' found ''
+ # zstyle ':prezto:module:history-substring-search:color' found ''
 
 # Set the query not found color.
- zstyle ':prezto:module:history-substring-search:color' not-found ''
+#  zstyle ':prezto:module:history-substring-search:color' not-found ''
 
 # Set the search globbing flags.
 # zstyle ':prezto:module:history-substring-search' globbing-flags ''
@@ -231,10 +231,10 @@ zstyle ':prezto:module:prompt' theme 'powerlevel10k'
 # zstyle ':prezto:module:tmux:auto-start' remote 'yes'
 
 # Integrate with iTerm2.
-zstyle ':prezto:module:tmux:iterm' integrate 'yes'
+# zstyle ':prezto:module:tmux:iterm' integrate 'yes'
 
 # Set the default session name:
-# zstyle ':prezto:module:tmux:session' name 'YOUR DEFAULT SESSION NAME'
+# zstyle ':prezto:module:tmux:session' name 'dev'
 
 #
 # Utility
