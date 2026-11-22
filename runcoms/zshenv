@@ -47,15 +47,7 @@ if (( $+commands[lesspipe.sh] )); then
   export LESSOPEN='| /usr/bin/env lesspipe.sh %s 2>&-'
 fi
 
-# Initializes pyenv
-if command -v pyenv 1>/dev/null 2>&1; then
-  eval "$(pyenv init -)"
-fi
+# pyenv: PATH comes from `pyenv init --path` in zprofile; the shell integration
+# (`pyenv init -`) is in ~/.zshrc. Not here: zshenv runs for every zsh, scripts included.
 
-# send keys in tmux
-ts() {
-    args=$@
-    tmux send-keys -t right "$args" C-m
-}
-
-
+. "$HOME/.cargo/env"
